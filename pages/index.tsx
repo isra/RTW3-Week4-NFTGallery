@@ -23,9 +23,17 @@ const Home: NextPage = () => {
     const urlNFTByWallet = `${baseURL}/getNFTs/`;
 
     if (!collection.trim().length) {
-      responseFetch = await fetch(`${urlNFTByWallet}?owner=${wallet}&pageSize=10${pageKey}`, headerOptions).then(res => res.json());
+      responseFetch = await fetch(`${urlNFTByWallet}?owner=${wallet}&pageSize=10${pageKey}`, headerOptions)
+                            .then(res => res.json())
+                            .catch(err => {
+                              console.log('error', err);
+                            });
     } else {
-      responseFetch = await fetch(encodeURI(`${urlNFTByWallet}?owner=${wallet}&contractAddresses[]=${collection}&pageSize=10${pageKey}`), headerOptions).then(res => res.json());
+      responseFetch = await fetch(encodeURI(`${urlNFTByWallet}?owner=${wallet}&contractAddresses[]=${collection}&pageSize=10${pageKey}`), headerOptions)
+                            .then(res => res.json())
+                            .catch(err => {
+                              console.log('error', err);
+                            });
     }
 
     if (responseFetch) {
@@ -38,7 +46,11 @@ const Home: NextPage = () => {
   const fetchNFTForCollection = async () => {
     let response: any;
     if (collection.length) {
-      response = await fetch(`${baseURL}/getNFTsForCollection?contractAddress=${collection}&withMetadata=true`).then(res => res.json());
+      response = await fetch(`${baseURL}/getNFTsForCollection?contractAddress=${collection}&withMetadata=true`)
+                        .then(res => res.json())
+                        .catch(err => {
+                          console.log('error', err);
+                        });
     }
 
     if (response) {
@@ -49,6 +61,7 @@ const Home: NextPage = () => {
   }
 
   const hanldleFetchNFTs = () => {
+    if (!wallet) return;
     if (fetchForCollection) {
       fetchNFTForCollection();
     } else fetchNFT();
